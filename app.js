@@ -9,15 +9,15 @@ const io = socketIo(server);
 app.use(express.static('public'));
 
 io.on('connection', (socket) => {
-  console.log('A user connected');
+  console.log(`User connected:${socket.id}`);
 
-  socket.on('chat message', (msg) => {
+  socket.on('chat-message', (msg) => {
     console.log('Message received: ' + msg);
-    io.emit('chat message', msg);
+    socket.broadcast.emit('chat-message', msg);
   });
 
   socket.on('disconnect', () => {
-    console.log('User disconnected');
+    console.log(`User disconnected:${socket.id}`);
   });
 });
 

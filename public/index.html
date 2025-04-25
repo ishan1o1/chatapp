@@ -4,33 +4,48 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Chat App</title>
-  <style>
-    body { font-family: Arial, sans-serif; }
-    #messages { list-style-type: none; padding: 0; }
-    #messages li { padding: 8px; margin-bottom: 4px; border: 1px solid #ddd; }
-    input[type="text"] { width: 200px; }
-  </style>
+ <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <h1>Chat Room</h1>
   <ul id="messages"></ul>
-  <input id="m" autocomplete="off" placeholder="Type a message..."><button onclick="sendMessage()">Send</button>
+  <input id="m" autocomplete="off" placeholder="Type a message...">
+  <button id="button" onclick="sendMessage()">Send</button>
 
   <script src="/socket.io/socket.io.js"></script>
   <script>
-   const socket=io('https://c5d7-2409-40e3-2097-b061-c1b9-1410-78d9-e200.ngrok-free.app');
+
+    const button=document.getElementById('button');
+    const input=document.getElementById('m');
+    const ul=document.getElementById('messages');
+
+
+    ///button.addEventListener('click',sendMessage);
+
+    input.addEventListener('keydown',function(event){
+      if(event.key==='Enter'){
+        button.click();
+      }
+    })
+
+   const socket=io();
 
     // Send message function
     function sendMessage() {
       const message = document.getElementById('m').value;
-      socket.emit('chat message', message);
-      document.getElementById('m').value = ''; 
+      
+      socket.emit('chat-message', message);
+      
+      const li=document.createElement('li');
+      li.textContent=message;
+      ul.appendChild(li);
+      document.getElementById('m').value='';
     }
 
-    socket.on('chat message', (msg) => {
+    socket.on('chat-message', (msg) => {
       const li = document.createElement('li');
       li.textContent = msg;
-      document.getElementById('messages').appendChild(li);
+      ul.appendChild(li);
     });
   </script>
 </body>

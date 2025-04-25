@@ -7,28 +7,29 @@
  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h1>Chat Room</h1>
-  <ul id="messages"></ul>
+  <h1 >Anonymous Chat Room</h1>
+   <ul id="messages"></ul>
+  <div>
   <input id="m" autocomplete="off" placeholder="Type a message...">
   <button id="button" onclick="sendMessage()">Send</button>
-
+  </div>
   <script src="/socket.io/socket.io.js"></script>
   <script>
 
     const button=document.getElementById('button');
     const input=document.getElementById('m');
     const ul=document.getElementById('messages');
+    
 
-
-    ///button.addEventListener('click',sendMessage);
-
+    
     input.addEventListener('keydown',function(event){
       if(event.key==='Enter'){
         button.click();
       }
     })
-
-   const socket=io();
+    
+    const socket=io();
+    //chatId.appendChild(socket.id);
 
     // Send message function
     function sendMessage() {
@@ -37,14 +38,14 @@
       socket.emit('chat-message', message);
       
       const li=document.createElement('li');
-      li.textContent=message;
-      ul.appendChild(li);
+      li.textContent=`${socket.id}: ${message}`;
+      ul.appendChild(li); 
       document.getElementById('m').value='';
     }
 
     socket.on('chat-message', (msg) => {
       const li = document.createElement('li');
-      li.textContent = msg;
+      li.textContent = `${msg.id}: ${msg.message}`; 
       ul.appendChild(li);
     });
   </script>
